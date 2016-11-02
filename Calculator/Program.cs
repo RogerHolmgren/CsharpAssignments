@@ -29,45 +29,90 @@ namespace Calculator
     {
         static void Main(string[] args)
         {
-            Console.Write("Type your equation and press enter (q to quit).\n> ");
+            Console.WriteLine("Type your equation and press enter (q to quit).");
             bool keepRunning = true;
             while (keepRunning)
             {
+                Console.Write("> ");
                 string input = Console.ReadLine().Trim();
-                if (input.Length == 1)
+                if (input[0].Equals('q'))
                 {
-                    keepRunning = !input[0].Equals('q');
+                    keepRunning = false;
                 }
-                else if (true)
+                else if (isValidInput(input))
                 {
                     runCalculator(input);
                     Console.Write("> ");
                 }
                 else
                 {
-                    Console.Write("Invalid input, please try again.\n> ");
+                    ErrorMessage("Invalid input, please try again or (q to quit).");
                 }
             }
             Console.WriteLine("Thank you for using this calculator. Bye!");
         }
 
+
+
+        private static bool isValidInput(string input)
+        {
+            String[] inputArray = input.Split(new char[] { '+', '-', '*', '/' });
+            foreach (var item in inputArray)
+            {
+                int value;
+                if (!int.TryParse(item, out value))
+                {
+                    ErrorMessage($"{item} is not a valid input!");
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private static void runCalculator(string input)
         {
-            String[] numbersArray = input.Split('*');
-            foreach (var item in numbersArray)
+            int answer = add(input);
+            Console.WriteLine($"Answer is {answer}");
+            
+        }
+
+        private static int add(string input)
+        {
+            if (input.Contains("+"))
             {
-                Console.WriteLine(item);
+                String[] addVariables = input.Split(new char[] { '+' }, 2);
+                return add(addVariables[0]) + add(addVariables[1]); // sum
+            }
+            else if (input.Contains("-"))
+            {
+                String[] subtractVariables = input.Split(new char[] { '-' }, 2);
+                return add(subtractVariables[0]) - add(subtractVariables[1]);
+            }
+            else
+            {
+               return int.Parse(input);      
             }
         }
 
-        private static int add(int addend1, int addend2)
+
+
+
+
+        private static void ErrorMessage(string errorMessage)
         {
-            return addend1 + addend2; // sum
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(errorMessage);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
-        private static int subtract(int minuend, int subtrahend)
+
+
+
+        /*
+        private static int subtract(string values)
         {
-            return minuend - subtrahend; //difference
+            String[] subtractVariables = values.Split(new char[] { '-' }, 2);
+            return add(subtractVariables[0]) - add(subtractVariables[1]);
         }
 
         private static int multiply(int multiplicand, int multiplier)
@@ -79,6 +124,7 @@ namespace Calculator
         {
             return dividend; // quotient  // remainder, int or double?
         }
+        */
     }
 
 
