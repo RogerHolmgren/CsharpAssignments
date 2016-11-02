@@ -33,19 +33,26 @@ namespace Calculator
             bool keepRunning = true;
             while (keepRunning)
             {
-                Console.Write("> ");
-                string input = Console.ReadLine().Trim();
-                if (input[0].Equals('q'))
+                try
                 {
-                    keepRunning = false;
+                    Console.Write("> ");
+                    string input = Console.ReadLine().Trim();
+                    if (input[0].Equals('q'))
+                    {
+                        keepRunning = false;
+                    }
+                    else if (isValidInput(input))
+                    {
+                        runCalculator(input);
+                    }
+                    else
+                    {
+                        ErrorMessage("Invalid input, please try again or (q to quit).");
+                    }
                 }
-                else if (isValidInput(input))
+                catch (IndexOutOfRangeException e)
                 {
-                    runCalculator(input);
-                }
-                else
-                {
-                    ErrorMessage("Invalid input, please try again or (q to quit).");
+                    ErrorMessage("You have to type something, please try again or (q to quit).");
                 }
             }
             Console.WriteLine("Thank you for using this calculator. Bye!");
@@ -111,6 +118,7 @@ namespace Calculator
             }
             else
             {
+                Console.Write("->"+input);
                return int.Parse(input);      
             }
         }
