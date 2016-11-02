@@ -62,8 +62,16 @@ namespace Calculator
                 int value;
                 if (!int.TryParse(item, out value))
                 {
-                    ErrorMessage($"{item} is not a valid input!");
-                    return false;
+                    if (item.Equals("") && input.First().Equals('-'))
+                    {
+                        // If empty string and leading '-' let it slide.
+                        // fixes when first number is negative.
+                    }
+                    else
+                    {
+                        ErrorMessage($"{item} is not a valid input!");
+                        return false;
+                    }
                 }
             }
             return true;
@@ -86,6 +94,11 @@ namespace Calculator
             else if (input.Contains("-"))
             {
                 String[] subtractVariables = input.Split(new char[] { '-' }, 2);
+                if (subtractVariables[0].Equals(""))
+                {
+                    return -int.Parse(subtractVariables[1]);
+                }
+
                 return add(subtractVariables[0]) - add(subtractVariables[1]);
             }
             else
