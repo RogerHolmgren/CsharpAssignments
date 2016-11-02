@@ -66,7 +66,7 @@ namespace Calculator
         /// <returns></returns>
         private static bool isValidInput(string input)
         {
-            String[] inputArray = input.Split(new char[] { '+', '-', '*', '/' });
+            String[] inputArray = input.Split(new char[] { '+', '-', '*', '/', '(', ')' });
             foreach (var item in inputArray)
             {
                 int value;
@@ -86,11 +86,31 @@ namespace Calculator
             return true;
         }
 
-        private static void runCalculator(string input)
+        private static void runCalculator(string originalInput)
         {
-            double answer = splitInputOnce(input);
+            double answer = 0;
+
+
+            string resolvedParanthesises = calculateParanthesisBlock(originalInput);
+
+            answer = splitInputOnce(resolvedParanthesises);
             Console.WriteLine($"Answer is {answer}");
-            
+        }
+
+        private static string calculateParanthesisBlock(string input)
+        {
+            if (input.Contains("("))
+            {
+                int start = input.IndexOf("(")+1;
+                int end = input.IndexOf(")", start);
+                string block = input.Substring(start, end - start);
+                string blockWithParanthesis = input.Substring(start-1, end - start+2 );
+                return input.Replace(blockWithParanthesis, calculateParanthesisBlock(block));
+            }
+            else
+            {
+                return splitInputOnce(input).ToString();
+            }
         }
 
         /// <summary>
@@ -118,11 +138,9 @@ namespace Calculator
             }
             else
             {
-                Console.Write("->"+input);
                return int.Parse(input);      
             }
         }
-
 
         private static double add(string values)
         {
