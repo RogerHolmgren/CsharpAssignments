@@ -42,7 +42,6 @@ namespace Calculator
                 else if (isValidInput(input))
                 {
                     runCalculator(input);
-                    Console.Write("> ");
                 }
                 else
                 {
@@ -52,8 +51,12 @@ namespace Calculator
             Console.WriteLine("Thank you for using this calculator. Bye!");
         }
 
-
-
+        /// <summary>
+        /// Checks if the input is valid by splitting on +, -, /. *, and then checks to make 
+        /// sure that all items in the array are integers.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         private static bool isValidInput(string input)
         {
             String[] inputArray = input.Split(new char[] { '+', '-', '*', '/' });
@@ -62,10 +65,9 @@ namespace Calculator
                 int value;
                 if (!int.TryParse(item, out value))
                 {
-                    if (item.Equals("") && input.First().Equals('-'))
+                    if (item.Equals(""))
                     {
-                        // If empty string and leading '-' let it slide.
-                        // fixes when first number is negative.
+                        // If empty string it means that first number is negative.
                     }
                     else
                     {
@@ -79,27 +81,33 @@ namespace Calculator
 
         private static void runCalculator(string input)
         {
-            int answer = add(input);
+            double answer = splitInputOnce(input);
             Console.WriteLine($"Answer is {answer}");
             
         }
 
-        private static int add(string input)
+        /// <summary>
+        /// Sorts the inputs on the four aritmethic or if no aritmetic exists in the string returns the content as int.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private static double splitInputOnce(string input)
         {
             if (input.Contains("+"))
             {
-                String[] addVariables = input.Split(new char[] { '+' }, 2);
-                return add(addVariables[0]) + add(addVariables[1]); // sum
+                return add(input);
             }
             else if (input.Contains("-"))
             {
-                String[] subtractVariables = input.Split(new char[] { '-' }, 2);
-                if (subtractVariables[0].Equals(""))
-                {
-                    return -int.Parse(subtractVariables[1]);
-                }
-
-                return add(subtractVariables[0]) - add(subtractVariables[1]);
+                return subtract(input);
+            }
+            else if (input.Contains("*"))
+            {
+                return multiply(input);
+            }
+            else if (input.Contains("/"))
+            {
+                return divide(input);
             }
             else
             {
@@ -108,36 +116,48 @@ namespace Calculator
         }
 
 
-
-
-
-        private static void ErrorMessage(string errorMessage)
+        private static double add(string values)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(errorMessage);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            String[] addVariables = values.Split(new char[] { '+' }, 2);
+            return splitInputOnce(addVariables[0]) + splitInputOnce(addVariables[1]); 
         }
 
-
-
-
-        /*
-        private static int subtract(string values)
+        private static double subtract(string values)
         {
             String[] subtractVariables = values.Split(new char[] { '-' }, 2);
-            return add(subtractVariables[0]) - add(subtractVariables[1]);
+            if (subtractVariables[0].Equals(""))
+            {
+                return -int.Parse(subtractVariables[1]);
+            }
+
+            return splitInputOnce(subtractVariables[0]) - splitInputOnce(subtractVariables[1]);
         }
 
-        private static int multiply(int multiplicand, int multiplier)
+        private static double multiply(string input)
         {
-            return multiplicand * multiplier;
+            String[] addVariables = input.Split(new char[] { '*' }, 2);
+            return splitInputOnce(addVariables[0]) * splitInputOnce(addVariables[1]);
         }
 
-        private static int divide(int dividend, int divisor)
+        private static double divide(string input)
         {
-            return dividend; // quotient  // remainder, int or double?
+            String[] addVariables = input.Split(new char[] { '/' }, 2);
+            return splitInputOnce(addVariables[0]) / splitInputOnce(addVariables[1]);
         }
-        */
+
+
+
+        /// <summary>
+        /// Prints to console in red letters without affecting the color of future output.
+        /// </summary>
+        /// <param name="errorMessage"></param>
+        private static void ErrorMessage(string errorMessage)
+        {
+            ConsoleColor previousColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(errorMessage);
+            Console.ForegroundColor = previousColor;
+        }
     }
 
 
