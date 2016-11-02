@@ -91,21 +91,21 @@ namespace Calculator
             double answer = 0;
 
 
-            string resolvedParanthesises = calculateParanthesisBlock(originalInput);
+            string resolvedParantheses = resolveParanthesisBlock(originalInput);
 
-            answer = splitInputOnce(resolvedParanthesises);
+            answer = splitInputOnce(resolvedParantheses);
             Console.WriteLine($"Answer is {answer}");
         }
 
-        private static string calculateParanthesisBlock(string input)
+        private static string resolveParanthesisBlock(string input)
         {
             if (input.Contains("("))
             {
                 int start = input.IndexOf("(")+1;
                 int end = input.IndexOf(")", start);
-                string block = input.Substring(start, end - start);
-                string blockWithParanthesis = input.Substring(start-1, end - start+2 );
-                return input.Replace(blockWithParanthesis, calculateParanthesisBlock(block));
+                string paranthesisBlock = input.Substring(start-1, end - start+2 );
+                string paranthesisContent = input.Substring(start, end - start);
+                return input.Replace(paranthesisBlock, resolveParanthesisBlock(paranthesisContent));  
             }
             else
             {
