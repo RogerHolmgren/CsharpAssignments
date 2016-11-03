@@ -10,7 +10,7 @@ namespace Golf
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("asd");
+            Console.WriteLine(PhysicsEngine.getAngleInRadians(90f));
         }
     }
 }

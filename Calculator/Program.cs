@@ -36,8 +36,8 @@ namespace Calculator
                 try
                 {
                     Console.Write("> ");
-                    string input = Console.ReadLine().Trim();
-                    if (input[0].Equals('q') || input[0].Equals('Q'))
+                    string input = Console.ReadLine().Trim().ToLower();
+                    if (input.First().Equals('q'))
                     {
                         keepRunning = false;
                     }
@@ -50,12 +50,53 @@ namespace Calculator
                         ErrorMessage("Invalid input, please try again or (q to quit).");
                     }
                 }
-                catch (IndexOutOfRangeException)
+                catch (InvalidOperationException)
                 {
                     ErrorMessage("You have to type something, please try again or (q to quit).");
                 }
             }
             Console.WriteLine("Thank you for using this calculator. Bye!");
+        }
+       
+        /// <summary>
+        /// Run the calculator with any input
+        /// </summary>
+        /// <param name="originalInput"></param>
+        private static void runCalculator(string originalInput)
+        {
+            string resolvedParantheses = solveParantheses(originalInput);
+
+            double finalAnswer = doTheMath(resolvedParantheses);
+
+            if (Double.IsInfinity(finalAnswer))
+            {
+                Console.WriteLine("No answer, part of the equation tried to divide by Zero. Please try again:");
+            } else
+            {
+                Console.WriteLine($"Answer is {finalAnswer}");
+            }
+        }
+
+        /// <summary>
+        /// Fully solves the expression within a parantheses.
+        /// Warning: Does not handle nested parantheses.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>A string with the paranthesis replaced by a</returns>
+        private static string solveParantheses(string input)
+        {
+            if (input.Contains("("))
+            {
+                int start = input.IndexOf("(")+1;
+                int end = input.IndexOf(")", start);
+                string paranthesisBlock = input.Substring(start-1, end - start+2 );
+                string paranthesisContent = input.Substring(start, end - start);
+                return input.Replace(paranthesisBlock, solveParantheses(paranthesisContent));  
+            }
+            else
+            {
+                return doTheMath(input).ToString();
+            }
         }
 
         /// <summary>
@@ -76,7 +117,7 @@ namespace Calculator
 
             // Check if the last character is ok
             char last = input.Last();
-            if (last.Equals('^') || last.Equals('*') || last.Equals('/') || last.Equals(')'))
+            if (last.Equals('^') || last.Equals('*') || last.Equals('/') || last.Equals('('))
             {
                 ErrorMessage($"{last} is not a valid as the last character in input!");
                 return false;
@@ -90,7 +131,7 @@ namespace Calculator
             }
 
             // check for each element between mathematical operators.
-            String[] inputArray = input.Split(new char[] { '+', '-', '*', '/', '(', ')' , '^'});
+            String[] inputArray = input.Split(new char[] { '+', '-', '*', '/', '(', ')', '^' });
             foreach (var item in inputArray)
             {
                 double value;
@@ -111,52 +152,12 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Run the calculator with any input
-        /// </summary>
-        /// <param name="originalInput"></param>
-        private static void runCalculator(string originalInput)
-        {
-            double answer = 0;
-
-            string resolvedParantheses = resolveParanthesisBlock(originalInput);
-
-            answer = inputFilter(resolvedParantheses);
-            Console.WriteLine($"Answer is {answer}");
-        }
-
-        /// <summary>
-        /// <para>
-        /// Fully solves the expression within a parantheses.
-        /// </para>
-        /// <para>
-        /// Warning: Does not handle nested parantheses.
-        /// </para>
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns>A string with the paranthesis replaced by a</returns>
-        private static string resolveParanthesisBlock(string input)
-        {
-            if (input.Contains("("))
-            {
-                int start = input.IndexOf("(")+1;
-                int end = input.IndexOf(")", start);
-                string paranthesisBlock = input.Substring(start-1, end - start+2 );
-                string paranthesisContent = input.Substring(start, end - start);
-                return input.Replace(paranthesisBlock, resolveParanthesisBlock(paranthesisContent));  
-            }
-            else
-            {
-                return inputFilter(input).ToString();
-            }
-        }
-
-        /// <summary>
         /// inputFilter is a parent function of the the mathematical expression functions (add, subtract...),
         /// which uses this function recursivly to solve each expression in the correct order of operations.
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private static double inputFilter(string input)
+        private static double doTheMath(string input)
         {
             if (input.Contains("+"))
             {
@@ -180,6 +181,7 @@ namespace Calculator
             }
             else
             {
+                // No need for try since input was validated earlier.
                return double.Parse(input);      
             }
         }
@@ -187,7 +189,7 @@ namespace Calculator
         private static double add(string values)
         {
             String[] addVariables = values.Split(new char[] { '+' }, 2);
-            return inputFilter(addVariables[0]) + inputFilter(addVariables[1]); 
+            return doTheMath(addVariables[0]) + doTheMath(addVariables[1]); 
         }
 
         private static double subtract(string values)
@@ -198,27 +200,26 @@ namespace Calculator
                 return -int.Parse(subtractVariables[1]);
             }
 
-            return inputFilter(subtractVariables[0]) - inputFilter(subtractVariables[1]);
+            return doTheMath(subtractVariables[0]) - doTheMath(subtractVariables[1]);
         }
 
-        private static double multiply(string input)
+        private static double multiply(string values)
         {
-            String[] addVariables = input.Split(new char[] { '*' }, 2);
-            return inputFilter(addVariables[0]) * inputFilter(addVariables[1]);
+            String[] addVariables = values.Split(new char[] { '*' }, 2);
+            return doTheMath(addVariables[0]) * doTheMath(addVariables[1]);
         }
 
-        private static double divide(string input)
+        private static double divide(string values)
         {
-            String[] addVariables = input.Split(new char[] { '/' }, 2);
-            return inputFilter(addVariables[0]) / inputFilter(addVariables[1]);
+            String[] addVariables = values.Split(new char[] { '/' }, 2);
+            return doTheMath(addVariables[0]) / doTheMath(addVariables[1]);
         }
 
-        private static double pow(string input)
+        private static double pow(string values)
         {
-            String[] addVariables = input.Split(new char[] { '^' }, 2);
-            return Math.Pow(inputFilter(addVariables[0]), inputFilter(addVariables[1]));
+            String[] addVariables = values.Split(new char[] { '^' }, 2);
+            return Math.Pow(doTheMath(addVariables[0]), doTheMath(addVariables[1]));
         }
-
 
         /// <summary>
         /// Prints to console in red letters without affecting the color of future output.
