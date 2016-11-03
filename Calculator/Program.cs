@@ -66,7 +66,14 @@ namespace Calculator
         /// <returns></returns>
         private static bool isValidInput(string input)
         {
-            String[] inputArray = input.Split(new char[] { '+', '-', '*', '/', '(', ')' });
+            char first = input.First();
+            if (first.Equals('^') || first.Equals('*') || first.Equals('/') || first.Equals(')'))
+            {
+                ErrorMessage($"{first} is not a valid as the first character in input!");
+                return false;
+            }
+
+            String[] inputArray = input.Split(new char[] { '+', '-', '*', '/', '(', ')' , '^'});
             foreach (var item in inputArray)
             {
                 int value;
@@ -136,6 +143,10 @@ namespace Calculator
             {
                 return divide(input);
             }
+            else if (input.Contains("^"))
+            {
+                return pow(input);
+            }
             else
             {
                return int.Parse(input);      
@@ -171,6 +182,11 @@ namespace Calculator
             return splitInputOnce(addVariables[0]) / splitInputOnce(addVariables[1]);
         }
 
+        private static double pow(string input)
+        {
+            String[] addVariables = input.Split(new char[] { '^' }, 2);
+            return Math.Pow(splitInputOnce(addVariables[0]), splitInputOnce(addVariables[1]));
+        }
 
 
         /// <summary>
