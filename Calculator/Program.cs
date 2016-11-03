@@ -37,7 +37,7 @@ namespace Calculator
                 {
                     Console.Write("> ");
                     string input = Console.ReadLine().Trim();
-                    if (input[0].Equals('q'))
+                    if (input[0].Equals('q') || input[0].Equals('Q'))
                     {
                         keepRunning = false;
                     }
@@ -50,7 +50,7 @@ namespace Calculator
                         ErrorMessage("Invalid input, please try again or (q to quit).");
                     }
                 }
-                catch (IndexOutOfRangeException e)
+                catch (IndexOutOfRangeException)
                 {
                     ErrorMessage("You have to type something, please try again or (q to quit).");
                 }
@@ -66,6 +66,7 @@ namespace Calculator
         /// <returns></returns>
         private static bool isValidInput(string input)
         {
+            // Check if the first character is ok
             char first = input.First();
             if (first.Equals('^') || first.Equals('*') || first.Equals('/') || first.Equals(')'))
             {
@@ -73,15 +74,31 @@ namespace Calculator
                 return false;
             }
 
+            // Check if the last character is ok
+            char last = input.Last();
+            if (last.Equals('^') || last.Equals('*') || last.Equals('/') || last.Equals(')'))
+            {
+                ErrorMessage($"{last} is not a valid as the last character in input!");
+                return false;
+            }
+
+            // check for illegal double-assignments
+            if (input.Contains("**") || input.Contains("++") || input.Contains("//"))
+            {
+                ErrorMessage("Input contains illegal mathematical expressions!");
+                return false;
+            }
+
+            // check for each element between mathematical operators.
             String[] inputArray = input.Split(new char[] { '+', '-', '*', '/', '(', ')' , '^'});
             foreach (var item in inputArray)
             {
-                int value;
-                if (!int.TryParse(item, out value))
+                double value;
+                if (!double.TryParse(item, out value))
                 {
                     if (item.Equals(""))
                     {
-                        // If empty string it means that first number is negative.
+                        // If empty string it means that number is negative.
                     }
                     else
                     {
@@ -93,17 +110,30 @@ namespace Calculator
             return true;
         }
 
+        /// <summary>
+        /// Run the calculator with any input
+        /// </summary>
+        /// <param name="originalInput"></param>
         private static void runCalculator(string originalInput)
         {
             double answer = 0;
 
-
             string resolvedParantheses = resolveParanthesisBlock(originalInput);
 
-            answer = splitInputOnce(resolvedParantheses);
+            answer = inputFilter(resolvedParantheses);
             Console.WriteLine($"Answer is {answer}");
         }
 
+        /// <summary>
+        /// <para>
+        /// Fully solves the expression within a parantheses.
+        /// </para>
+        /// <para>
+        /// Warning: Does not handle nested parantheses.
+        /// </para>
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>A string with the paranthesis replaced by a</returns>
         private static string resolveParanthesisBlock(string input)
         {
             if (input.Contains("("))
@@ -116,16 +146,17 @@ namespace Calculator
             }
             else
             {
-                return splitInputOnce(input).ToString();
+                return inputFilter(input).ToString();
             }
         }
 
         /// <summary>
-        /// Sorts the inputs on the four aritmethic or if no aritmetic exists in the string returns the content as int.
+        /// inputFilter is a parent function of the the mathematical expression functions (add, subtract...),
+        /// which uses this function recursivly to solve each expression in the correct order of operations.
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private static double splitInputOnce(string input)
+        private static double inputFilter(string input)
         {
             if (input.Contains("+"))
             {
@@ -149,14 +180,14 @@ namespace Calculator
             }
             else
             {
-               return int.Parse(input);      
+               return double.Parse(input);      
             }
         }
 
         private static double add(string values)
         {
             String[] addVariables = values.Split(new char[] { '+' }, 2);
-            return splitInputOnce(addVariables[0]) + splitInputOnce(addVariables[1]); 
+            return inputFilter(addVariables[0]) + inputFilter(addVariables[1]); 
         }
 
         private static double subtract(string values)
@@ -167,25 +198,25 @@ namespace Calculator
                 return -int.Parse(subtractVariables[1]);
             }
 
-            return splitInputOnce(subtractVariables[0]) - splitInputOnce(subtractVariables[1]);
+            return inputFilter(subtractVariables[0]) - inputFilter(subtractVariables[1]);
         }
 
         private static double multiply(string input)
         {
             String[] addVariables = input.Split(new char[] { '*' }, 2);
-            return splitInputOnce(addVariables[0]) * splitInputOnce(addVariables[1]);
+            return inputFilter(addVariables[0]) * inputFilter(addVariables[1]);
         }
 
         private static double divide(string input)
         {
             String[] addVariables = input.Split(new char[] { '/' }, 2);
-            return splitInputOnce(addVariables[0]) / splitInputOnce(addVariables[1]);
+            return inputFilter(addVariables[0]) / inputFilter(addVariables[1]);
         }
 
         private static double pow(string input)
         {
             String[] addVariables = input.Split(new char[] { '^' }, 2);
-            return Math.Pow(splitInputOnce(addVariables[0]), splitInputOnce(addVariables[1]));
+            return Math.Pow(inputFilter(addVariables[0]), inputFilter(addVariables[1]));
         }
 
 
@@ -201,6 +232,4 @@ namespace Calculator
             Console.ForegroundColor = previousColor;
         }
     }
-
-
 }
