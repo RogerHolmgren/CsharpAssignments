@@ -13,9 +13,9 @@
             this.swingLimit = swingLimit;
         }
 
-        public override string ToString()
+        public string Description()
         {
-            return $"Distance to cup {cupPosition}, golf course length {length} meters in total.";
+            return $"Distance to cup {cupPosition}, golf course length {length} meters in total. Swing limit is {swingLimit}.";
         }
     }
 }
