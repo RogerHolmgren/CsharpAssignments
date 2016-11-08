@@ -18,7 +18,7 @@ namespace Golf
 
         public void DoSwing(int angle, int velocity)
         {
-            int distanceTraveled = PhysicsEngine.getDistance(angle, velocity);
+            int distanceTraveled = golfCourse.engine.getDistance(angle, velocity);
             updateCurrentPosition(distanceTraveled);
             swings.Add(new Swing(currentPosition, distanceTraveled));
         }
@@ -42,7 +42,7 @@ namespace Golf
 
         public string Status()
         {
-            return $"Swing #{swings.Count}. Your current position is {currentPosition}, the cup is {DistanceToCup()} meter away.";
+            return $"Your current position is {currentPosition}, the cup is {DistanceToCup()} meter away ({golfCourse.swingLimit - swings.Count} swings left).";
         }
 
         public bool CanContinue()

@@ -8,28 +8,37 @@ namespace ArenaFighter
 {
     class Character
     {
-        private readonly int DEFAULT_LEVEL = 5;
-        private readonly char HEART = '\u2665';
+        private static readonly int DEFAULT_LEVEL = 5;
+        private static readonly char HEART = '\u2665';
 
-        internal string name { get; private set; }
-        internal int currentHealth { get; private set; }
-        internal int maxHealth { get; private set; }
-        internal int strength { get; private set; }
-        internal int attack { get; private set; }
-        internal int level { get; private set; }
+        public string name { get; private set; }
+        public int currentHealth { get; private set; }
+        public int maxHealth { get; private set; }
+        public int damage { get; private set; }
+        public int strength { get; private set; }
+        public int level { get; private set; }
+        public bool isEnemy { get; private set; }
 
-        public Character(string name)
+        public static Character GetPlayerCharacter(string name)
         {
-            this.name = name;
-            this.level = DEFAULT_LEVEL;
-            rollStats();
+            var player = new Character(name == "" ? "Noname" : name);
+            player.isEnemy = false;
+            player.level = DEFAULT_LEVEL;
+            player.rollStats();
+            return player;
+        }
+        public static Character GetEnemyCharacter(int level)
+        {
+            var enemy = new Character("Grognak");
+            enemy.isEnemy = true;
+            enemy.level = level;
+            enemy.rollStats();
+            return enemy;
         }
 
-        public Character(string name, int level) : this(name)
+        private Character(string name)
         {
             this.name = name;
-            this.level = level;
-            rollStats();
         }
 
         public void rollStats()
@@ -45,8 +54,8 @@ namespace ArenaFighter
             c /= k;
 
             currentHealth = maxHealth = (int)(a + 0.5) + level;
-            strength = (int)(b + 0.5);
-            attack = (int)(c + 0.5);
+            damage = (int)(b + 0.5);
+            strength = (int)(c + 0.5);
         }
 
         public string currentHealthAsHeartbar()
@@ -71,7 +80,11 @@ namespace ArenaFighter
         public void printCharacterSheet(int x, int y)
         {
             WriteAt("+-------------------------------+", x, y);
-            WriteAt("| Character name: " + name, x, y + 1);
+            WriteAt("| ", x, y + 1);
+            Console.ForegroundColor = isEnemy ? ConsoleColor.Red : ConsoleColor.Green;
+            Console.Write(name);
+            WriteAt($"lvl: {level}", x + 24, y + 1);
+            Console.ForegroundColor = ConsoleColor.Gray;
             WriteAt("| -----------------------------", x, y + 2);
             WriteAt("| Health: ", x, y + 3);
             Console.ForegroundColor = ConsoleColor.Red;
@@ -79,11 +92,11 @@ namespace ArenaFighter
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write(lostHealthAsHeartbar());
             Console.ForegroundColor = ConsoleColor.Gray;
-            WriteAt("| Power: " + strength, x, y + 4);
-            WriteAt("| Attack: " + attack, x, y + 5);
+            WriteAt("| Damage: " + damage, x, y + 4);
+            WriteAt("| Attack: " + strength, x, y + 5);
             WriteAt("| -----------------------------", x, y + 6);
             WriteAt("| Items:", x, y + 7);
-            WriteAt("| 1: +1 Sword", x, y + 8);
+            WriteAt("| 1: NA", x, y + 8);
             WriteAt("+-------------------------------+", x, y + 9);
 
             for (int i = 1; i < 9; i++)

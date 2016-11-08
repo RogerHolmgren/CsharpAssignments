@@ -8,8 +8,8 @@ namespace ArenaFighter
 {
     class Battle
     {
-        private Character player;
-        private Character enemy;
+        public Character player { get; private set; }
+        public Character enemy { get; private set; }
 
         public Battle(Character player, Character enemy)
         {
@@ -17,16 +17,13 @@ namespace ArenaFighter
             this.enemy = enemy;
         }
 
-        public void PrintOpponents()
+        internal Round Fight()
         {
-            Console.Clear();
-            player.printCharacterSheet(0,0);
-            enemy.printCharacterSheet(41,0);
-            Console.SetCursorPosition(34, 4);
-            Console.Write("< VS >");
-            Console.SetCursorPosition(0, 20);
+            Random rnd = new Random();
+            int playerFightValue = player.strength + rnd.Next(1,6);
+
+
+            return new Round();
         }
-
-
     }
 }

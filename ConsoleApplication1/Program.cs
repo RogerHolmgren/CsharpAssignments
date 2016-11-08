@@ -10,14 +10,11 @@ namespace ArenaFighter
     {
         static void Main(string[] args)
         {
-            // For the heart character to work.
-            Console.OutputEncoding = Encoding.UTF8;
+            Console.OutputEncoding = Encoding.UTF8; // For the heart character to work.
             var player = CreateCharacter();
-
-            Console.Clear();
-            player.printCharacterSheet(0,0);
-
-            startBattle(player);
+            var enemy = Character.GetEnemyCharacter(1);
+            var myBattle = new Battle(player, enemy);
+            startBattle(myBattle);
 
 
 
@@ -25,35 +22,55 @@ namespace ArenaFighter
             //Console.SetCursorPosition(0, 20);
         }
 
-        private static void startBattle(Character player)
+        private static void startBattle(Battle myBattle)
         {
-            var myBattle = new Battle(player, new Character("Enemy", 1));
+            PrintOpponents(myBattle);
+            bool continueBattle = true;
+            while (continueBattle)
+            {
+                Console.WriteLine("A foe has appeared! 'space' to fight, 'Q' to quit.");
+                switch (Console.ReadKey(true).Key)
+                {
+                    case ConsoleKey.Q:
+                        continueBattle = false;
+                        break;
+                    case ConsoleKey.Spacebar:
+                        myBattle.Fight();
+                        break;
+                    default:
+                        break;
+                }
 
-                myBattle.PrintOpponents();
-
-
+            }
         }
 
         private static Character CreateCharacter()
         {
             Console.Write("Name your character: ");
-            var player = new Character(Console.ReadLine());
-            ConsoleKeyInfo key;
+            var player = Character.GetPlayerCharacter(Console.ReadLine());
             do
             {
+                player.rollStats();
                 Console.Clear();
                 Console.WriteLine("Name: " + player.name);
                 Console.WriteLine("Health: " + player.maxHealth);
-                Console.WriteLine("Strength: " + player.strength);
-                Console.WriteLine("Attack: " + player.attack);
-                Console.WriteLine("Sum: " + (player.maxHealth + player.strength + player.attack));
+                Console.WriteLine("Damage: " + player.damage);
+                Console.WriteLine("Attack: " + player.strength);
+                Console.WriteLine("Sum: " + (player.maxHealth + player.damage + player.strength));
                 Console.WriteLine("Press Enter to accept, Space to reroll");
-                key = Console.ReadKey(true);
-                player.rollStats();
-            } while (key.Key != ConsoleKey.Enter);
-
+            } while (Console.ReadKey(true).Key != ConsoleKey.Enter);
 
             return player;
+        }
+
+        private static void PrintOpponents(Battle b)
+        {
+            Console.Clear();
+            b.player.printCharacterSheet(0, 0);
+            b.enemy.printCharacterSheet(41, 0);
+            Console.SetCursorPosition(34, 4);
+            Console.Write("< VS >");
+            Console.SetCursorPosition(0, 11);
         }
     }
 }
