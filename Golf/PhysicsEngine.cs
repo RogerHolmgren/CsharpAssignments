@@ -19,7 +19,7 @@ namespace Golf
 
         public PhysicsEngine()
         {
-            setPlanet(Planet.Earth);
+            SetPlanet(Planet.Earth);
         }
 
         private double getAngleInRadians(double angle)
@@ -41,7 +41,7 @@ namespace Golf
         /// Just for fun I added the option to play golf on any of the inner planets in our solar system.
         /// </summary>
         /// <param name="planet"></param>
-        private void setPlanet(Planet planet)
+        public void SetPlanet(Planet planet)
         {
             switch (planet)
             {
@@ -60,7 +60,5 @@ namespace Golf
                     break;
             }
         }
-
-
     }
 }

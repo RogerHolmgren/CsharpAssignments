@@ -7,7 +7,7 @@ namespace Golf
         public int cupPosition { get; private set; }
         public int length { get; private set; }
         public int swingLimit { get; private set; }
-        public PhysicsEngine engine { get; private set; }
+        public PhysicsEngine PhysicsEngine { get; private set; }
 
 
         public GolfCourse(int cupPosition, int courseLength, int swingLimit, PhysicsEngine engine)
@@ -15,7 +15,7 @@ namespace Golf
             this.cupPosition = cupPosition;
             this.length = courseLength;
             this.swingLimit = swingLimit;
-            this.engine = engine;
+            this.PhysicsEngine = engine;
         }
 
         public string Description()

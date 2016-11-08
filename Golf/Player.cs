@@ -5,8 +5,8 @@ namespace Golf
 {
     internal class Player
     {
-        private readonly GolfCourse golfCourse;
         public List<Swing> swings;
+        public GolfCourse golfCourse { get; private set; }
         public int currentPosition { get; private set; }
 
         public Player(GolfCourse golfCourse)
@@ -16,53 +16,57 @@ namespace Golf
             this.currentPosition = 0;
         }
 
+        /// <summary>
+        /// Calculates the distance travled and adds that swing to the collection.
+        /// </summary>
+        /// <param name="angle"></param>
+        /// <param name="velocity"></param>
         public void DoSwing(int angle, int velocity)
         {
-            int distanceTraveled = golfCourse.engine.getDistance(angle, velocity);
+            int distanceTraveled = golfCourse.PhysicsEngine.getDistance(angle, velocity);
             updateCurrentPosition(distanceTraveled);
             swings.Add(new Swing(currentPosition, distanceTraveled));
         }
 
+        /// <summary>
+        /// The most recent swing.
+        /// </summary>
+        /// <returns></returns>
         public Swing lastSwing()
         {
             return swings[swings.Count - 1];
         }
 
-        public void updateCurrentPosition(int distanceTraveled)
-        {
-            if (currentPosition > golfCourse.cupPosition)
-            {
-                currentPosition -= distanceTraveled;
-            } else
-            {
-                currentPosition += distanceTraveled;
-            }
-            
-        }
-
+        /// <summary>
+        /// Return a formated string with information about the player.
+        /// </summary>
+        /// <returns></returns>
         public string Status()
         {
             return $"Your current position is {currentPosition}, the cup is {DistanceToCup()} meter away ({golfCourse.swingLimit - swings.Count} swings left).";
         }
 
-        public bool CanContinue()
-        {
-            // Is player allowed to hit the ball?
-            if (swings.Count > golfCourse.swingLimit)
-            {
-                throw new Exception("Too many Swings");
-            }
-            else if (currentPosition > golfCourse.length)
-            {
-                throw new Exception("Outside course error!");
-            }
-
-            return DistanceToCup() != 0;
-        }
-
         public int DistanceToCup()
         {
             return Math.Abs(golfCourse.cupPosition - currentPosition);
+        }
+
+        /// <summary>
+        /// Updates the current position based on the distance traveled.
+        /// Takes into account whether you position is in front of or behind the cup position.
+        /// </summary>
+        /// <param name="distanceTraveled"></param>
+        private void updateCurrentPosition(int distanceTraveled)
+        {
+            if (currentPosition > golfCourse.cupPosition)
+            {
+                currentPosition -= distanceTraveled;
+            }
+            else
+            {
+                currentPosition += distanceTraveled;
+            }
+
         }
     }
 
