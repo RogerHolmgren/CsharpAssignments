@@ -8,6 +8,9 @@ namespace ArenaFighter
 {
     class Round
     {
+
+
+        /*
         public bool tie { get; internal set; }
 
         public int playerDiceRoll { get; internal set; }
@@ -25,5 +28,6 @@ namespace ArenaFighter
         {
             this.tie = false;
         }
+        */
     }
 }

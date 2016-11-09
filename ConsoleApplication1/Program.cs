@@ -8,33 +8,76 @@ namespace ArenaFighter
 {
     class Program
     {
+        private static List<Battle> myBattles;
+
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8; // For the heart character to work.
 
-            var player = CreateCharacter();
-            List<Battle> myBattles = new List<Battle>();
+            Character player = CreateCharacter();
+            myBattles = new List<Battle>();
             while (player.IsAlive())
             {
                 int enemyLevel = myBattles.Count + 1;
-                var newBattle = new Battle(player, Character.GetEnemyCharacter(enemyLevel));
-                DoBattle(ref newBattle);
-                myBattles.Add(newBattle);
+                Character newEnemy = Character.GetEnemyCharacter(enemyLevel);
+                var newBattle = new Battle(player, newEnemy);
+                EnterBattleMode(newBattle);
+                
             }
 
-            //          int battleCount = 1;
-            //          foreach (var battle in myBattles)
-            //          {
-            //              Console.WriteLine("\nBattle: " + battleCount++);
-            //              int roundCount = 1;
-            //              foreach (var round in battle.Rounds)
-            //              {
-            //                  Console.WriteLine(" Round: " + roundCount++);
-            //                  Console.WriteLine(" Player dice roll: " + round.playerDiceRoll);
-            //              }
-            //          }
+
         }
 
+        private static void EnterBattleMode(Battle newBattle)
+        {
+            while (true)
+            {
+
+            }
+            myBattles.Add(newBattle);
+        }
+
+        private static Character CreateCharacter()
+        {
+            Console.Write("Name your character: ");
+            var player = Character.GetPlayerCharacter(Console.ReadLine());
+            do
+            {
+                RollStats(player);
+                Console.Clear();
+                Console.WriteLine("Name: " + player.name);
+                Console.WriteLine("Health: " + player.maxHealth);
+                Console.WriteLine("Damage: " + player.damage);
+                Console.WriteLine("Attack: " + player.strength);
+                Console.WriteLine("Sum: " + (player.maxHealth + player.damage + player.strength));
+                Console.WriteLine("Press Enter to accept, Space to reroll");
+            } while (Console.ReadKey(true).Key != ConsoleKey.Enter);
+
+            return player;
+        }
+        /// <summary>
+        /// Rolled stats always have approximatly the same sum. Higher level gives higher stats.
+        /// </summary>
+        public static void RollStats(Character character)
+        {
+            int minValue = 2 + character.level;
+            int maxValue = character.isPlayer ? 12 + character.level : 17 + character.level; // adds 5 for player advantage.
+            Random rnd = new Random();
+            double a = rnd.Next(minValue, maxValue);
+            double b = rnd.Next(minValue, maxValue);
+            double c = rnd.Next(minValue, maxValue);
+            double k = (a + b + c) / maxValue;
+            a /= k;
+            b /= k;
+            c /= k;
+
+            character.currentHealth = character.maxHealth = (int)(a + 0.5) + character.level;
+            character.damage = (int)(b + 0.5);
+            character.strength = (int)(c + 0.5);
+        }
+
+
+        /*
         private static void BattleReport(Battle myBattle)
         {
             foreach (var round in myBattle.Rounds)
@@ -71,24 +114,7 @@ namespace ArenaFighter
             }
         }
 
-        private static Character CreateCharacter()
-        {
-            Console.Write("Name your character: ");
-            var player = Character.GetPlayerCharacter(Console.ReadLine());
-            do
-            {
-                player.rollStats();
-                Console.Clear();
-                Console.WriteLine("Name: " + player.name);
-                Console.WriteLine("Health: " + player.maxHealth);
-                Console.WriteLine("Damage: " + player.damage);
-                Console.WriteLine("Attack: " + player.strength);
-                Console.WriteLine("Sum: " + (player.maxHealth + player.damage + player.strength));
-                Console.WriteLine("Press Enter to accept, Space to reroll");
-            } while (Console.ReadKey(true).Key != ConsoleKey.Enter);
 
-            return player;
-        }
 
         private static void PrintCharacterSheet(Character c, int x, int y)
         {
@@ -170,5 +196,7 @@ namespace ArenaFighter
             Console.SetCursorPosition(x, y);
             Console.Write(s);
         }
+
+        */
     }
 }
