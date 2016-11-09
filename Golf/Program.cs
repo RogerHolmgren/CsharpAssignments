@@ -82,7 +82,7 @@ namespace Golf
         {
             int cupPosition = new Random().Next(MIN_DISTANCE, MAX_DISTANCE);
             int courseLength = cupPosition * 2;
-            int swingLimit = cupPosition / 100;
+            int swingLimit = cupPosition / 100 + 1;
             PhysicsEngine engine = new PhysicsEngine();
             return new GolfCourse(cupPosition, courseLength, swingLimit, engine);
         }
