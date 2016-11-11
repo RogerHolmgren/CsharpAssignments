@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace ArenaFighter
 {
-    public class Character
+    public class Character : ICloneable
     {
         private static readonly int DEFAULT_LEVEL = 1;
         private static readonly char HEART = '\u2665';
-
-        private int Armor = 0;
-        private int DieSizeModifier = 0;
-        private int DieResultModifier = 0;
 
         public string name { get; private set; }
         public bool isPlayer { get; private set; }
@@ -21,8 +17,9 @@ namespace ArenaFighter
         public int currentHealth { get; set; }
         public int damage { get; set; }
         public int strength { get; set; }
-        public int level { get; set; }
-        
+        public int level { get; set; } = DEFAULT_LEVEL;
+        public bool IsRetired { get; set; } = false;
+
 
         /// <summary>
         /// Cannot invoke Character Class directly. Class instantiation needs to be done through GetPlayerCharacter or GetEnemyCharacter.
@@ -37,7 +34,6 @@ namespace ArenaFighter
         {
             var player = new Character(name == "" ? "Nameless" : name);
             player.isPlayer = true;
-            player.level = DEFAULT_LEVEL;
             return player;
         }
 
@@ -56,14 +52,8 @@ namespace ArenaFighter
 
         public void TakeDamage(int damage)
         {
-            if (damage >= Armor)
-            {
-                currentHealth -= (damage - Armor);
-            }
-            currentHealth = currentHealth < 0 ? 0 : currentHealth; // currentHealth cannot be below zero.
+            currentHealth = (currentHealth - damage < 0) ? 0 : currentHealth - damage; // currentHealth cannot be below zero.
         }
-
-
 
         public string currentHealthAsHeartbar()
         {
@@ -82,6 +72,19 @@ namespace ArenaFighter
                 bar += HEART;
             }
             return bar;
+        }
+
+        public object Clone()
+        {
+            Character copy = new Character(name);
+            copy.isPlayer = isPlayer;
+            copy.maxHealth = maxHealth;
+            copy.currentHealth = currentHealth;
+            copy.damage = damage;
+            copy.strength = strength;
+            copy.level = level;
+            copy.IsRetired = IsRetired;
+            return copy;
         }
     }
 }

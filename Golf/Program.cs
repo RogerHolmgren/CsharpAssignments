@@ -58,10 +58,10 @@ namespace Golf
         /// <param name="player"></param>
         private static void PrintSummary(Player player)
         {
+            Console.WriteLine("--- Summary ---");
             if (player.DistanceToCup() == 0)
             {
                 Console.WriteLine($"You hit the cup!. Swings = {player.swings.Count}");
-
             }
             else
             {
@@ -94,7 +94,7 @@ namespace Golf
         /// <returns></returns>
         private static bool FollowsTheRules(Player player)
         {
-            if (player.swings.Count > player.golfCourse.swingLimit) // Has player overextended
+            if (player.swings.Count >= player.golfCourse.swingLimit) // Has player overextended
             {
                 throw new Exception("Too many Swings");
             }

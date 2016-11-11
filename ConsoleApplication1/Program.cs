@@ -12,29 +12,49 @@ namespace ArenaFighter
 
         static void Main(string[] args)
         {
-            Console.OutputEncoding = Encoding.UTF8; // For the heart character to work.
+            Console.OutputEncoding = Encoding.UTF8; // For the heart char to work.
 
             Character player = CreateCharacter();
+            Console.Clear();
+            PrintCharacterSheet(player, 0, 0);
             myBattles = new List<Battle>();
-            while (player.IsAlive())
+
+            // Main game loop
+            while (!player.IsRetired && player.IsAlive())
             {
-                int enemyLevel = myBattles.Count + 1;
-                Character newEnemy = Character.GetEnemyCharacter(enemyLevel);
-                var newBattle = new Battle(player, newEnemy);
-                EnterBattleMode(newBattle);
-                
+                var newBattle = new Battle(player, getRandomEnemy());
+                PrintBattleScreen(newBattle);
+                switch (Console.ReadKey(true).Key)
+                {
+                    case ConsoleKey.Q:
+                        player.IsRetired = true;
+                        break;
+                    case ConsoleKey.Spacebar:
+                        EnterBattle(newBattle);
+                        break;
+                }
             }
-
-
+            PrintBattleReport();
         }
 
-        private static void EnterBattleMode(Battle newBattle)
+        private static Character getRandomEnemy()
         {
-            while (true)
-            {
+            int enemyLevel = myBattles.Count + 1;
+            Character newEnemy = Character.GetEnemyCharacter(enemyLevel);
+            RollStats(newEnemy);
+            return newEnemy;
+        }
 
-            }
-            myBattles.Add(newBattle);
+        private static void EnterBattle(Battle battle)
+        {
+            do
+            {
+                battle.saveToLog(Round.CalculateOneRound(battle.player, battle.enemy));
+                PrintBattleScreen(battle);
+                Console.WriteLine("\n--- Press space to continue! ---");
+                Console.ReadKey(true);
+            } while (!battle.IsDone());
+            myBattles.Add(battle);
         }
 
         private static Character CreateCharacter()
@@ -56,12 +76,13 @@ namespace ArenaFighter
             return player;
         }
         /// <summary>
-        /// Rolled stats always have approximatly the same sum. Higher level gives higher stats.
+        /// Rolled stats always have approximately the same sum. Higher level gives higher stats.
         /// </summary>
         public static void RollStats(Character character)
         {
             int minValue = 2 + character.level;
-            int maxValue = character.isPlayer ? 12 + character.level : 17 + character.level; // adds 5 for player advantage.
+            int baseMaxValue = character.isPlayer ? 17 : 12; // Adds 5 for player advantage.
+            int maxValue = baseMaxValue + character.level;
             Random rnd = new Random();
             double a = rnd.Next(minValue, maxValue);
             double b = rnd.Next(minValue, maxValue);
@@ -76,51 +97,59 @@ namespace ArenaFighter
             character.strength = (int)(c + 0.5);
         }
 
+        //---------------------------------------------------------------------
+        //
+        //      Functions that prints stuff to console. 
+        //
+        //---------------------------------------------------------------------
 
-        /*
-        private static void BattleReport(Battle myBattle)
+        private static void PrintBattleScreen(Battle b)
         {
-            foreach (var round in myBattle.Rounds)
-            {
-                Console.WriteLine("Player rolled " + round.playerDiceRoll);
-            }
-        }
+            Console.Clear();
+            PrintCharacterSheet(b.player, 0, 0);
 
-        private static void DoBattle(ref Battle myBattle)
-        {
-            bool continueBattle = true;
-            while (continueBattle)
-            {
-                RedrawScreen(myBattle);
+            PrintCharacterSheet(b.enemy, 41, 0);
+            Console.SetCursorPosition(34, 4);
+            Console.Write("< VS >");
+            Console.SetCursorPosition(0, 11);
 
-                switch (Console.ReadKey(true).Key)
+            if (b.Rounds.Count > 0)
+            {
+                int roundsCount = 1;
+                foreach (var r in b.Rounds)
                 {
-                    case ConsoleKey.Q:
-                        continueBattle = false;
-                        break;
-                    case ConsoleKey.Spacebar:
-                    case ConsoleKey.F10:
-                        myBattle.Fight();
-                        break;
-                    default:
-                        break;
+                    Console.Write($"[{roundsCount++}]------------------------\nBattle result: ");
+                    if (r.tie)
+                    {
+                        Console.WriteLine("There was a tie!");
+                    }
+                    else if (!r.player.IsAlive())
+                    {
+                        Console.WriteLine("Player died");
+                    }
+                    else if (!r.enemy.IsAlive())
+                    {
+                        Console.WriteLine("Enemy died");
+                    }
+                    else
+                    {
+                        Console.Write($"{r.player.name} {r.player.strength + r.playerDieRoll} ({r.player.strength} + {r.playerDieRoll})");
+                        Console.WriteLine($" vs {b.enemy.name} {r.enemy.strength + r.enemyDieRoll} ({r.enemy.strength} + {r.enemyDieRoll})");
+                        Console.WriteLine($"{r.getWinner().name} won and did {r.getWinner().damage} damage.");
+                    }
                 }
 
-                if (myBattle.IsDone())
-                {
-                    RedrawScreen(myBattle);
-                    continueBattle = false;
-                }
+            }
+            else
+            {
+                Console.WriteLine("A foe has appeared! 'space' to fight, 'Q' to quit.");
             }
         }
-
-
-
         private static void PrintCharacterSheet(Character c, int x, int y)
         {
             WriteAt("+-------------------------------+", x, y);
             WriteAt("| ", x, y + 1);
-            Console.ForegroundColor = c.isEnemy ? ConsoleColor.Red : ConsoleColor.Green;
+            Console.ForegroundColor = c.isPlayer ? ConsoleColor.Green : ConsoleColor.Red;
             Console.Write(c.name);
             WriteAt($"lvl: {c.level}", x + 24, y + 1);
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -145,40 +174,34 @@ namespace ArenaFighter
 
             Console.ResetColor();
         }
-        private static void RedrawScreen(Battle b)
+        private static void PrintBattleReport()
         {
             Console.Clear();
-            PrintCharacterSheet(b.player, 0, 0);
-            if (b.enemy.IsAlive())
-            {
-                PrintCharacterSheet(b.enemy, 41, 0);
-                Console.SetCursorPosition(34, 4);
-                Console.Write("< VS >");
-                Console.SetCursorPosition(0, 11);
-                Console.WriteLine("A foe has appeared! 'space' to fight, 'Q' to quit.");
-            }
-
+            PrintCharacterSheet(myBattles[myBattles.Count - 1].player, 0, 0);
             Console.SetCursorPosition(0, 12);
-
-            if (b.Rounds.Count > 0)
+            Console.WriteLine($"Player played {myBattles.Count} battles!");
+            int battleCount = 1;
+            int totalDamage = 0;
+            foreach (var battle in myBattles)
             {
-                Round r = b.Rounds[b.Rounds.Count - 1];
-                if (r.tie)
+                Console.WriteLine($"> Battle {battleCount++} had {battle.Rounds.Count} rounds.");
+                foreach (var round in battle.Rounds)
                 {
-                    Console.WriteLine("There was a tie!");
-                }
-                else
-                {
-                    Console.Write($"Rolls: {b.player.name} {r.playerStrength + r.playerDiceRoll} ({r.playerStrength} + {r.playerDiceRoll})");
-                    Console.WriteLine($" vs {b.enemy.name} {r.enemyStrength + r.enemyDiceRoll} ({r.enemyStrength} + {r.enemyDiceRoll})");
-                    Console.WriteLine($"{r.winnerName} won and did {r.winnerDamage} damage.");
-                }
+                    if (!round.tie)
+                    {
+                        totalDamage += round.getWinner().Equals(round.player) ? round.player.damage : 0;
+                    }
 
+                }
             }
-
-
+            Console.WriteLine($"Player retired: {myBattles.Last<Battle>().player.IsRetired}");
+            Console.WriteLine($"Total damage done was {totalDamage}");
         }
-
+        private static void WriteAt(string s, int x, int y)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.Write(s);
+        }
         private static void popup(int x, int y)
         {
             //origRow = Console.CursorTop;
@@ -190,13 +213,5 @@ namespace ArenaFighter
             WriteAt("| taken each round.        |", x, y + 2);
             WriteAt("+--------------------------+", x, y + 3);
         }
-
-        private static void WriteAt(string s, int x, int y)
-        {
-            Console.SetCursorPosition(x, y);
-            Console.Write(s);
-        }
-
-        */
     }
 }

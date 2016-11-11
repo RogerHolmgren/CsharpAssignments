@@ -47,6 +47,15 @@ namespace ArenaFighter.Tests
             Assert.AreEqual(character.currentHealth, 0);
         }
 
+        [TestMethod()]
+        public void CloneCharacter()
+        {
+            var original = Character.GetPlayerCharacter("Nils");
+            original.damage = 10;
+            var clone = (Character)original.Clone();
+            clone.damage = 5;
+            Assert.IsFalse(original.damage == clone.damage);
+        }
 
     }
 }
