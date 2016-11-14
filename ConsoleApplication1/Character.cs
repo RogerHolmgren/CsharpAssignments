@@ -55,6 +55,11 @@ namespace ArenaFighter
             currentHealth = (currentHealth - damage < 0) ? 0 : currentHealth - damage; // currentHealth cannot be below zero.
         }
 
+        public void heal(int healing)
+        {
+            currentHealth = (currentHealth + healing > maxHealth) ? maxHealth : currentHealth + healing; // Lowers current health if more that maxHealth.
+        }
+
         public string currentHealthAsHeartbar()
         {
             string bar = "";
@@ -74,6 +79,10 @@ namespace ArenaFighter
             return bar;
         }
 
+        /// <summary>
+        /// Clone character in order to save a snapshot of the character for the battle log.
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
             Character copy = new Character(name);

@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArenaFighter", "ConsoleAppl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArenaFighterTests", "ArenaFighterTests\ArenaFighterTests.csproj", "{63DA3232-A57E-4C01-8441-BEE57FE18993}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VendingMachine", "VendingMachine\VendingMachine.csproj", "{655A1029-F9A4-4006-AD39-49A910DD5679}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VendingMachineTests", "VendingMachineTests\VendingMachineTests.csproj", "{895CF7D2-D96B-4996-A68B-78DF721846AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{63DA3232-A57E-4C01-8441-BEE57FE18993}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63DA3232-A57E-4C01-8441-BEE57FE18993}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63DA3232-A57E-4C01-8441-BEE57FE18993}.Release|Any CPU.Build.0 = Release|Any CPU
+		{655A1029-F9A4-4006-AD39-49A910DD5679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{655A1029-F9A4-4006-AD39-49A910DD5679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{655A1029-F9A4-4006-AD39-49A910DD5679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{655A1029-F9A4-4006-AD39-49A910DD5679}.Release|Any CPU.Build.0 = Release|Any CPU
+		{895CF7D2-D96B-4996-A68B-78DF721846AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{895CF7D2-D96B-4996-A68B-78DF721846AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{895CF7D2-D96B-4996-A68B-78DF721846AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{895CF7D2-D96B-4996-A68B-78DF721846AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

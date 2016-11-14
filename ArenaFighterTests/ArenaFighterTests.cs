@@ -57,5 +57,25 @@ namespace ArenaFighter.Tests
             Assert.IsFalse(original.damage == clone.damage);
         }
 
+        [TestMethod()]
+        public void HealCharacter()
+        {
+            var original = Character.GetPlayerCharacter("Nils");
+            original.maxHealth = original.currentHealth = 10;
+            original.TakeDamage(4);
+            original.heal(2);
+            Assert.IsTrue(original.currentHealth == original.maxHealth - 2);
+        }
+
+        [TestMethod()]
+        public void HealCharacterToMuch()
+        {
+            var original = Character.GetPlayerCharacter("Nils");
+            original.maxHealth = original.currentHealth = 10;
+            original.TakeDamage(4);
+            original.heal(30);
+            Assert.IsTrue(original.currentHealth == original.maxHealth);
+        }
+
     }
 }

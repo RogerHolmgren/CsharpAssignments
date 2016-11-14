@@ -20,9 +20,18 @@ namespace ArenaFighter
             myBattles = new List<Battle>();
 
             // Main game loop
+            Character nextEnemyEncounter = getRandomEnemy();
             while (!player.IsRetired && player.IsAlive())
             {
-                var newBattle = new Battle(player, getRandomEnemy());
+                // Generate and show next battle
+                var newBattle = new Battle(player, nextEnemyEncounter);
+                PrintBattleScreen(newBattle);
+
+                // check for levelup
+                if (nextEnemyEncounter.level % 3 == 0)
+                    levelup(player);
+
+                // Start the new battle or retire character
                 PrintBattleScreen(newBattle);
                 switch (Console.ReadKey(true).Key)
                 {
@@ -31,10 +40,40 @@ namespace ArenaFighter
                         break;
                     case ConsoleKey.Spacebar:
                         EnterBattle(newBattle);
+                        nextEnemyEncounter = getRandomEnemy();
                         break;
                 }
             }
             PrintBattleReport();
+        }
+
+        private static void levelup(Character player)
+        {
+            player.level++;
+            popup(21, 1);
+            bool levelupMenu = true;
+            while (levelupMenu)
+            {
+                switch (Console.ReadKey(true).Key)
+                {
+                    case ConsoleKey.D1:
+                        player.heal(2);
+                        levelupMenu = false;
+                        break;
+                    case ConsoleKey.D2:
+                        player.damage++;
+                        levelupMenu = false;
+                        break;
+                    case ConsoleKey.D3:
+                        player.strength++;
+                        levelupMenu = false;
+                        break;
+                    case ConsoleKey.D4:
+                        player.maxHealth++;
+                        levelupMenu = false;
+                        break;
+                }
+            }
         }
 
         private static Character getRandomEnemy()
@@ -102,7 +141,6 @@ namespace ArenaFighter
         //      Functions that prints stuff to console. 
         //
         //---------------------------------------------------------------------
-
         private static void PrintBattleScreen(Battle b)
         {
             Console.Clear();
@@ -208,10 +246,16 @@ namespace ArenaFighter
             //origCol = Console.CursorLeft;
 
             // Draw the left side of a 5x5 rectangle, from top to bottom.
-            WriteAt("+-------[ Shield ]---------+", x, y);
-            WriteAt("| Removes the first damage |", x, y + 1);
-            WriteAt("| taken each round.        |", x, y + 2);
-            WriteAt("+--------------------------+", x, y + 3);
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.White;
+            WriteAt("+-------[ Level Up ]----------+", x, y);
+            WriteAt("| Choose one of the options!  |", x, y + 1);
+            WriteAt("| 1. Heal for 2               |", x, y + 2);
+            WriteAt("| 2. +1 Damage                |", x, y + 3);
+            WriteAt("| 3. +1 Strength              |", x, y + 4);
+            WriteAt("| 4. Increase Max Health by 1 |", x, y + 5);
+            WriteAt("+-----------------------------+", x, y + 6);
+            Console.ResetColor();
         }
     }
 }
