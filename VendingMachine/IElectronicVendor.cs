@@ -9,5 +9,8 @@ namespace VendingMachine
     interface IElectronicVendor
     {
         void InsertCash(string denomination);
+        bool BuyProduct(Product prod);
+        List<string> getChange();
+        List<Product> GetSelection();
     }
 }
