@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexicon.CSharp.InfoGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,6 @@ namespace ArenaFighter
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8; // For the heart char to work.
-
             Character player = CreateCharacter();
             Console.Clear();
             PrintCharacterSheet(player, 0, 0);
@@ -34,15 +34,21 @@ namespace ArenaFighter
 
                 // Start the new battle or retire character
                 PrintBattleScreen(newBattle);
-                switch (Console.ReadKey(true).Key)
+                bool menu = true;
+                while (menu)
                 {
-                    case ConsoleKey.Q:
-                        player.IsRetired = true;
-                        break;
-                    case ConsoleKey.Spacebar:
-                        EnterBattle(newBattle);
-                        nextEnemyEncounter = getRandomEnemy();
-                        break;
+                    switch (Console.ReadKey(true).Key)
+                    {
+                        case ConsoleKey.Q:
+                            player.IsRetired = true;
+                            menu = false;
+                            break;
+                        case ConsoleKey.Spacebar:
+                            EnterBattle(newBattle);
+                            nextEnemyEncounter = getRandomEnemy();
+                            menu = false;
+                            break;
+                    }
                 }
             }
             PrintBattleReport();
@@ -58,7 +64,7 @@ namespace ArenaFighter
                 switch (Console.ReadKey(true).Key)
                 {
                     case ConsoleKey.D1:
-                        player.heal(2);
+                        player.heal(99);
                         levelupMenu = false;
                         break;
                     case ConsoleKey.D2:
@@ -71,6 +77,7 @@ namespace ArenaFighter
                         break;
                     case ConsoleKey.D4:
                         player.maxHealth++;
+                        player.currentHealth++;
                         levelupMenu = false;
                         break;
                 }
@@ -99,18 +106,26 @@ namespace ArenaFighter
 
         private static Character CreateCharacter()
         {
-            Console.Write("Name your character: ");
+            Console.WriteLine("--- Welcome to ArenaFighter! ---");
+            Console.Write("\nName your character: ");
             var player = Character.GetPlayerCharacter(Console.ReadLine());
             do
             {
                 RollStats(player);
                 Console.Clear();
-                Console.WriteLine("Name: " + player.name);
-                Console.WriteLine("Health: " + player.maxHealth);
-                Console.WriteLine("Damage: " + player.damage);
-                Console.WriteLine("Attack: " + player.strength);
-                Console.WriteLine("Sum: " + (player.maxHealth + player.damage + player.strength));
-                Console.WriteLine("Press Enter to accept, Space to reroll");
+                Console.WriteLine("------ Character Creation ------");
+                Console.Write("Review the stats for ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(player.name);
+                Console.ResetColor();
+                Console.WriteLine("--------------------------------");
+                Console.WriteLine("> Health: " + player.maxHealth);
+                Console.WriteLine("> Damage: " + player.damage);
+                Console.WriteLine("> Attack: " + player.strength);
+                Console.WriteLine("Total sum for your stats are: " + (player.maxHealth + player.damage + player.strength));
+                Console.WriteLine("--------------------------------");
+                Console.WriteLine("Press 'Enter' if you are happy with your stats.");
+                Console.WriteLine("Press 'Space' to roll for new stats.");
             } while (Console.ReadKey(true).Key != ConsoleKey.Enter);
 
             return player;
@@ -146,11 +161,10 @@ namespace ArenaFighter
         {
             Console.Clear();
             PrintCharacterSheet(b.player, 0, 0);
-
             PrintCharacterSheet(b.enemy, 41, 0);
-            Console.SetCursorPosition(34, 4);
+            Console.SetCursorPosition(34, 3);
             Console.Write("< VS >");
-            Console.SetCursorPosition(0, 11);
+            Console.SetCursorPosition(0, 8);
 
             if (b.Rounds.Count > 0)
             {
@@ -158,24 +172,36 @@ namespace ArenaFighter
                 foreach (var r in b.Rounds)
                 {
                     Console.Write($"[{roundsCount++}]------------------------\nBattle result: ");
+                    Console.Write($"{r.player.name} {r.player.strength + r.playerDieRoll} ({r.player.strength} + {r.playerDieRoll})");
+                    Console.WriteLine($" vs {b.enemy.name} {r.enemy.strength + r.enemyDieRoll} ({r.enemy.strength} + {r.enemyDieRoll})");
                     if (r.tie)
                     {
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.WriteLine("There was a tie!");
                     }
                     else if (!r.player.IsAlive())
                     {
-                        Console.WriteLine("Player died");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"You were killed by {r.enemy.name}!");
                     }
                     else if (!r.enemy.IsAlive())
                     {
-                        Console.WriteLine("Enemy died");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"{r.enemy.name} was slain");
                     }
                     else
                     {
-                        Console.Write($"{r.player.name} {r.player.strength + r.playerDieRoll} ({r.player.strength} + {r.playerDieRoll})");
-                        Console.WriteLine($" vs {b.enemy.name} {r.enemy.strength + r.enemyDieRoll} ({r.enemy.strength} + {r.enemyDieRoll})");
+                        if (r.player.Equals(r.getWinner()))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                        }
                         Console.WriteLine($"{r.getWinner().name} won and did {r.getWinner().damage} damage.");
                     }
+                    Console.ResetColor();
                 }
 
             }
@@ -201,12 +227,9 @@ namespace ArenaFighter
             Console.ForegroundColor = ConsoleColor.Gray;
             WriteAt("| Damage: " + c.damage, x, y + 4);
             WriteAt("| Strength: " + c.strength, x, y + 5);
-            WriteAt("| -----------------------------", x, y + 6);
-            WriteAt("| Items:", x, y + 7);
-            WriteAt("| 1: NA", x, y + 8);
-            WriteAt("+-------------------------------+", x, y + 9);
+            WriteAt("+-------------------------------+", x, y + 6);
 
-            for (int i = 1; i < 9; i++)
+            for (int i = 1; i < 6; i++)
             {
                 WriteAt("|", x + 32, y + i);
             }
@@ -217,13 +240,14 @@ namespace ArenaFighter
         {
             Console.Clear();
             PrintCharacterSheet(myBattles[myBattles.Count - 1].player, 0, 0);
-            Console.SetCursorPosition(0, 12);
-            Console.WriteLine($"Player played {myBattles.Count} battles!");
+            Console.SetCursorPosition(0, 8);
+            Console.WriteLine($"{myBattles.Last().player.name} played {myBattles.Count} battles!");
             int battleCount = 1;
             int totalDamage = 0;
             foreach (var battle in myBattles)
             {
-                Console.WriteLine($"> Battle {battleCount++} had {battle.Rounds.Count} rounds.");
+                Console.Write($"> Battle {battleCount++} had {battle.Rounds.Count} rounds. ");
+                Console.WriteLine(battle.Rounds.Last().getWinner().name + " won that battle.");
                 foreach (var round in battle.Rounds)
                 {
                     if (!round.tie)
@@ -251,7 +275,7 @@ namespace ArenaFighter
             Console.ForegroundColor = ConsoleColor.White;
             WriteAt("+-------[ Level Up ]----------+", x, y);
             WriteAt("| Choose one of the options!  |", x, y + 1);
-            WriteAt("| 1. Heal for 2               |", x, y + 2);
+            WriteAt("| 1. Heal upp to max          |", x, y + 2);
             WriteAt("| 2. +1 Damage                |", x, y + 3);
             WriteAt("| 3. +1 Strength              |", x, y + 4);
             WriteAt("| 4. Increase Max Health by 1 |", x, y + 5);

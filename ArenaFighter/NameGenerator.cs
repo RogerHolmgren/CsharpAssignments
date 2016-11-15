@@ -11,8 +11,8 @@ namespace ArenaFighter
     {
         private List<string> prefixes = new List<string>();
         private List<string> suffixes = new List<string>();
-        private bool prefixMode = false;
-        private bool suffixMode = false;
+        private bool prefixMode;
+        private bool suffixMode;
         private Random rnd = new Random();
 
         private const string CODE_INDICATOR = ":";
