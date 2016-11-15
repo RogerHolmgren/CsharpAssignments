@@ -37,9 +37,9 @@ namespace ArenaFighter
             return player;
         }
 
-        public static Character GetEnemyCharacter(int level)
+        public static Character GetEnemyCharacter(string name, int level)
         {
-            var enemy = new Character("Grognak");
+            var enemy = new Character(name);
             enemy.isPlayer = false;
             enemy.level = level;
             return enemy;

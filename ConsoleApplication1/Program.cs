@@ -9,6 +9,7 @@ namespace ArenaFighter
     class Program
     {
         private static List<Battle> myBattles;
+        private static NameGenerator randomNames = new NameGenerator();
 
         static void Main(string[] args)
         {
@@ -79,7 +80,7 @@ namespace ArenaFighter
         private static Character getRandomEnemy()
         {
             int enemyLevel = myBattles.Count + 1;
-            Character newEnemy = Character.GetEnemyCharacter(enemyLevel);
+            Character newEnemy = Character.GetEnemyCharacter(randomNames.GetRandomName(), enemyLevel);
             RollStats(newEnemy);
             return newEnemy;
         }
