@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{63DA3232-A57E-4C01-8441-BEE57FE18993}</ProjectGuid>
+    <ProjectGuid>{9A2282D5-91BD-41DA-9AC2-C9D252012B1F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ArenaFighterTests</RootNamespace>
-    <AssemblyName>ArenaFighterTests</AssemblyName>
+    <RootNamespace>AssignmentTests</RootNamespace>
+    <AssemblyName>AssignmentTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -52,7 +52,32 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ArenaFighterTests.cs" />
+    <Compile Include="MyListTests.cs" />
+    <Compile Include="PhysicsEngineTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VendingMachineTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ArenaFighter\ArenaFighter.csproj">
+      <Project>{208f69b6-ede7-4758-b0e7-6b80787049eb}</Project>
+      <Name>ArenaFighter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Calculator\Calculator.csproj">
+      <Project>{2c4cc531-c4ce-40f1-9c96-06bbe5549d55}</Project>
+      <Name>Calculator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Golf\Golf.csproj">
+      <Project>{a78725ba-dcca-4f0a-b110-87546873a4da}</Project>
+      <Name>Golf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyList\MyList.csproj">
+      <Project>{C52C0490-482C-4590-909B-4FD323E71759}</Project>
+      <Name>MyList</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VendingMachine\VendingMachine.csproj">
+      <Project>{655a1029-f9a4-4006-ad39-49a910dd5679}</Project>
+      <Name>VendingMachine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -22,7 +22,7 @@ namespace ArenaFighter
             string line;
 
             // Read the file and display it line by line.  
-            var path = @"c:\users\deltagare\documents\visual studio 2015\Projects\Calculator\ConsoleApplication1\names.txt";
+            var path = @"C:\Users\deltagare\Documents\Visual Studio 2015\Projects\Assignments\ArenaFighter\names.txt";
             System.IO.StreamReader file = new System.IO.StreamReader(path);
             while ((line = file.ReadLine()) != null)
             {

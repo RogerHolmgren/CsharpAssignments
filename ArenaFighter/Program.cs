@@ -57,7 +57,7 @@ namespace ArenaFighter
         private static void levelup(Character player)
         {
             player.level++;
-            popup(21, 1);
+            popup(23, 1);
             bool levelupMenu = true;
             while (levelupMenu)
             {
@@ -133,7 +133,7 @@ namespace ArenaFighter
         /// <summary>
         /// Rolled stats always have approximately the same sum. Higher level gives higher stats.
         /// </summary>
-        public static void RollStats(Character character)
+        private static void RollStats(Character character)
         {
             int minValue = 2 + character.level;
             int baseMaxValue = character.isPlayer ? 17 : 12; // Adds 5 for player advantage.
@@ -239,26 +239,32 @@ namespace ArenaFighter
         private static void PrintBattleReport()
         {
             Console.Clear();
-            PrintCharacterSheet(myBattles[myBattles.Count - 1].player, 0, 0);
-            Console.SetCursorPosition(0, 8);
-            Console.WriteLine($"{myBattles.Last().player.name} played {myBattles.Count} battles!");
-            int battleCount = 1;
-            int totalDamage = 0;
-            foreach (var battle in myBattles)
+            if (myBattles.Count > 0)
             {
-                Console.Write($"> Battle {battleCount++} had {battle.Rounds.Count} rounds. ");
-                Console.WriteLine(battle.Rounds.Last().getWinner().name + " won that battle.");
-                foreach (var round in battle.Rounds)
+                PrintCharacterSheet(myBattles[myBattles.Count - 1].player, 0, 0);
+                Console.SetCursorPosition(0, 8);
+                Console.WriteLine($"{myBattles.Last().player.name} played {myBattles.Count} battles!");
+                int battleCount = 1;
+                int totalDamage = 0;
+                foreach (var battle in myBattles)
                 {
-                    if (!round.tie)
+                    Console.Write($"> Battle {battleCount++} had {battle.Rounds.Count} rounds. ");
+                    Console.WriteLine(battle.Rounds.Last().getWinner().name + " won that battle.");
+                    foreach (var round in battle.Rounds)
                     {
-                        totalDamage += round.getWinner().Equals(round.player) ? round.player.damage : 0;
-                    }
+                        if (!round.tie)
+                        {
+                            totalDamage += round.getWinner().Equals(round.player) ? round.player.damage : 0;
+                        }
 
+                    }
                 }
+                Console.WriteLine($"Player retired: {myBattles.Last<Battle>().player.IsRetired}");
+                Console.WriteLine($"Total damage done was {totalDamage}");
+            } else
+            {
+                Console.WriteLine("You retired without having fought a single fight!");
             }
-            Console.WriteLine($"Player retired: {myBattles.Last<Battle>().player.IsRetired}");
-            Console.WriteLine($"Total damage done was {totalDamage}");
         }
         private static void WriteAt(string s, int x, int y)
         {
