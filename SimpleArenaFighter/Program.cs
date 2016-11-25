@@ -64,14 +64,15 @@ namespace SimpleArenaFighter
         /// <param name="b"></param>
         private static void ResolveOneRound(Battle b)
         {
-            // 'b' is ok for variablename because:
-            // - it's used often so shorter name makes the code cleaner
-            // - it is only used inside this method
+            // 'b' is ok for variablename here because:
+            // - it's used often so shorter name makes the code cleaner.
+            // - it is only used inside this method.
             // - the method only have one argument and it is clear that b means battle.
             Round thisRound = new Round(numberGenerator);
             int playerFightValue = b.player.strength + thisRound.playerRoll;
             int enemyFightValue = b.enemy.strength + thisRound.enemyRoll;
 
+            // Determine who won
             if (playerFightValue > enemyFightValue) // Player Won :)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -82,7 +83,7 @@ namespace SimpleArenaFighter
                 Console.ForegroundColor = ConsoleColor.Red;
                 thisRound.WinnerAttacksLoser(b.enemy, b.player); // Enemy hurts player
             }
-
+            // print the results, if no one won the results will be a tie.
             thisRound.PrintResults();
             Console.ResetColor();
             // Always save thisRound to the battle log of the current battle.

@@ -16,6 +16,7 @@ namespace SimpleArenaFighter
         /// <param name="enemy"></param>
         public Battle(Character player, Character enemy)
         {
+            rounds = new List<Round>();
             this.player = player;
             this.enemy = enemy;
         }
