@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentTests", "Assignme
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandboxConsole", "SandboxConsole\SandboxConsole.csproj", "{1F9B1800-661F-4ADF-BB7D-9E9D143EE0DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoCode", "DemoCode\DemoCode.csproj", "{2FA18425-F41E-4B00-A3D1-B88EA90825A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleArenaFighter", "SimpleArenaFighter\SimpleArenaFighter.csproj", "{39D8E157-932D-4624-8A6D-B65714087FA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{1F9B1800-661F-4ADF-BB7D-9E9D143EE0DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F9B1800-661F-4ADF-BB7D-9E9D143EE0DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F9B1800-661F-4ADF-BB7D-9E9D143EE0DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FA18425-F41E-4B00-A3D1-B88EA90825A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FA18425-F41E-4B00-A3D1-B88EA90825A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FA18425-F41E-4B00-A3D1-B88EA90825A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FA18425-F41E-4B00-A3D1-B88EA90825A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39D8E157-932D-4624-8A6D-B65714087FA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39D8E157-932D-4624-8A6D-B65714087FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39D8E157-932D-4624-8A6D-B65714087FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39D8E157-932D-4624-8A6D-B65714087FA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

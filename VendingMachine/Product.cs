@@ -8,9 +8,9 @@ namespace VendingMachine
 {
     public abstract class Product
     {
-        public string description { get; internal set; }
-        public int price { get; internal set; }
-        public string name { get; internal set; }
+        public string description { get; private set; }
+        public int price { get; private set; }
+        public string name { get; private set; }
 
         public Product(string name, int price, string description) {
             this.name = name;
@@ -19,7 +19,7 @@ namespace VendingMachine
         }
 
         /// <summary>
-        /// Pass in a money amount to try to purchase the product.
+        /// Pass in a money amount to try to purchase the product. throws an exception if moneyAmount is to low.
         /// </summary>
         /// <param name="moneyAmount"></param>
         /// <returns>The amount of change you get back after the purchase</returns>
@@ -32,11 +32,18 @@ namespace VendingMachine
             return moneyAmount - price;
         }
 
+        /// <summary>
+        /// A descriptive string of all the class fields.
+        /// </summary>
+        /// <returns>The string</returns>
         public string Examine()
         {
             return $"{name} ({price}kr): {description}";
         }
 
+        /// <summary>
+        /// Usage of the product
+        /// </summary>
         public abstract void Use();
     }
 }

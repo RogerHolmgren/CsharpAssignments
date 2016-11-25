@@ -8,7 +8,7 @@ namespace VendingMachine
 {
     public class VendingMachine : IElectronicVendor
     {
-        public readonly Dictionary<string, int> Allowed = new Dictionary<string, int>(){
+        public readonly Dictionary<string, int> AllowedCurrency = new Dictionary<string, int>(){
             {   "1kr", 1 },
             {   "5kr", 5 },
             {  "10kr", 10 },
@@ -26,11 +26,15 @@ namespace VendingMachine
             this.list = list;
         }
 
+        /// <summary>
+        /// Add money by supplying a string with a currency denomination.
+        /// </summary>
+        /// <param name="cash"></param>
         public void InsertCash(string cash)
         {
-            if (Allowed.ContainsKey(cash))
+            if (AllowedCurrency.ContainsKey(cash))
             {
-                MoneyAmountInPool += Allowed[cash];
+                MoneyAmountInPool += AllowedCurrency[cash];
             }
             else
             {
@@ -38,16 +42,24 @@ namespace VendingMachine
             }
         }
 
+        /// <summary>
+        /// Attempts to buy the supplied product.
+        /// </summary>
+        /// <param name="prod"></param>
+        /// <returns>Boolean: true if purchase was successful, false if not.</returns>
         public bool BuyProduct(Product prod)
         {
             try
             {
-                MoneyAmountInPool = prod.Purchase(MoneyAmountInPool);
+                int returnedChange = prod.Purchase(MoneyAmountInPool);
+                MoneyAmountInPool = returnedChange;
                 return true;
             }
             catch (Exception)
             {
-                return false;
+                // Exception in this case means that Purchase didn't work,
+                // so simply return false and dont change anything.
+                return false; 
             }
         }
 

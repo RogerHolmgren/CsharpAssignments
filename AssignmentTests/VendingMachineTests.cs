@@ -44,6 +44,24 @@ namespace VendingMachine.Tests
         }
 
         [TestMethod()]
+        [ExpectedException(typeof(Exception), "Not enough money exception.")]
+        public void PurchaseWithNotEnoughMoneyTest()
+        {
+            int money = 3;
+            Product prod = new Drink("Cola", 5, "A soda.");
+            prod.Purchase(money);
+            Assert.Fail(); // Should not happen since exception should have been thrown already.
+        }
+
+        [TestMethod()]
+        public void PurchaseWithEnoughMoneyTest()
+        {
+            int money = 5;
+            Product prod = new Drink("Cola", 5, "A soda.");
+            Assert.AreEqual(0, prod.Purchase(money));
+        }
+
+        [TestMethod()]
         public void insertMoneyTest()
         {
             VendingMachine vm = new VendingMachine(new List<Product>());
@@ -56,10 +74,11 @@ namespace VendingMachine.Tests
         public void GetChangeTest()
         {
             VendingMachine vm = new VendingMachine(new List<Product>());
+            vm.InsertCash("50kr");
             vm.InsertCash("5kr");
-            vm.InsertCash("5kr");
+            vm.InsertCash("1kr");
             List<string> change = vm.getChange();
-            Assert.AreEqual<int>(1, change.Count);
+            Assert.AreEqual<int>(3, change.Count);
         }
     }
 }
