@@ -31,12 +31,13 @@ namespace SimpleArenaFighter
         }
 
         /// <summary>
-        /// This method saves a Round object to a list.
+        /// Creates a new round and returns it.
         /// </summary>
-        /// <param name="round"></param>
-        internal void SaveRoundToBattleLog(Round round)
+        /// <param name="b"></param>
+        internal Round ResolveOneRound()
         {
-            rounds.Add(round);
+            rounds.Add(new Round(player, enemy)); // Save round to the battle log.
+            return rounds[rounds.Count -1]; // Return the last element in the list.
         }
 
         /// <summary>
@@ -58,7 +59,9 @@ namespace SimpleArenaFighter
                     }
                     else
                     {
+                        Console.ForegroundColor = battle.player.Equals(round.winner) ? ConsoleColor.Green : ConsoleColor.Red;
                         Console.WriteLine($"{round.winner.characterName} won round {roundCount++}");
+                        Console.ResetColor();
                     }
                 }
             }

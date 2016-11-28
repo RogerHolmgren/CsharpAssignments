@@ -4,6 +4,8 @@ namespace SimpleArenaFighter
 {
     internal class Character
     {
+        private static Random _numberGenerator = new Random();
+
         internal string characterName { get; private set; }
         internal int damage { get; set; }
         internal int health { get; set; }
@@ -17,6 +19,9 @@ namespace SimpleArenaFighter
         public Character(string playerName)
         {
             this.characterName = playerName;
+            this.health = _numberGenerator.Next(8, 20);
+            this.strength = _numberGenerator.Next(3, 8);
+            this.damage = _numberGenerator.Next(3, 8);
         }
 
         /// <summary>
@@ -37,6 +42,11 @@ namespace SimpleArenaFighter
         internal bool IsDead()
         {
             return health <= 0;
+        }
+
+        internal int DieRoll()
+        {
+            return _numberGenerator.Next(1, 6);
         }
     }
 }

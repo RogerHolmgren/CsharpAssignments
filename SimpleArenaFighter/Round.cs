@@ -4,31 +4,42 @@ namespace SimpleArenaFighter
 {
     internal class Round
     {
-        internal int playerRoll { get; private set; }
-        internal int enemyRoll { get; private set; }
+        private static Random _numberGenerator = new Random();
+
         public Character winner { get; private set; }
         public Character loser { get; private set; }
+        public int winnerFightValue { get; private set; }
+        public int loserfightValue { get; private set; }
 
         /// <summary>
-        /// When a round is instanciated playerRoll and enemyRoll get random values.
-        /// </summary>
-        /// <param name="numberGenerator"></param>
-        public Round(Random numberGenerator)
-        {
-            this.playerRoll = numberGenerator.Next(1, 6);
-            this.enemyRoll = numberGenerator.Next(1, 6);
-        }
-
-        /// <summary>
-        /// the winner deals damage to the loser
+        /// When instanciating a new Round fightValues, winner and loser is automatically resolved.
         /// </summary>
         /// <param name="player"></param>
         /// <param name="enemy"></param>
-        internal void WinnerAttacksLoser(Character winner, Character loser)
+        public Round(Character player, Character enemy)
         {
-            this.winner = winner;
-            this.loser = loser;
-            loser.health -= winner.damage;
+            int playerFightValue = player.strength + player.DieRoll();
+            int enemyFightValue = enemy.strength + enemy.DieRoll();
+
+            // Determine who won
+            if (playerFightValue > enemyFightValue) // Player Won :)
+            {
+                this.winner = player;
+                this.loser = enemy;
+                this.winnerFightValue = playerFightValue;
+                this.loserfightValue = enemyFightValue;
+            }
+            else if (playerFightValue < enemyFightValue) // Enemy won :(
+            {
+                this.winner = enemy;
+                this.loser = player;
+                this.winnerFightValue = enemyFightValue;
+                this.loserfightValue = playerFightValue;
+            }
+            if (!WasATie())
+            {
+                loser.health -= winner.damage;
+            }
         }
 
         internal void PrintResults()
