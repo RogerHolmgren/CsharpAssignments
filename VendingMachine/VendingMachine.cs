@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,12 +20,37 @@ namespace VendingMachine
             { "500kr", 500 },
             {"1000kr", 1000 }
         };
-        private List<Product> list;
+        private Dictionary<string, Product> selection = new Dictionary<string, Product>();
+
         public int MoneyAmountInPool { get; private set; }
 
-        public VendingMachine(List<Product> list)
+        public VendingMachine(List<Product> products)
         {
-            this.list = list;
+            PopulateSelection(products);
+        }
+
+        public VendingMachine(string jsonURL)
+        {
+            JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects };
+            string jsonContent = File.ReadAllText(jsonURL);
+            List<Product> products = JsonConvert.DeserializeObject<List<Product>>(jsonContent, jsonSettings);
+
+            PopulateSelection(products);
+        }
+
+        private void PopulateSelection(List<Product> products)
+        {
+            char row = 'A';
+            int col = 1;
+            foreach (var item in products)
+            {
+                this.selection.Add($"{row}{col++}", item);
+                if (col > 5)
+                {
+                    row++;
+                    col = 1;
+                }
+            }
         }
 
         /// <summary>
@@ -59,7 +86,7 @@ namespace VendingMachine
             {
                 // Exception in this case means that Purchase didn't work,
                 // so simply return false and dont change anything.
-                return false; 
+                return false;
             }
         }
 
@@ -112,9 +139,9 @@ namespace VendingMachine
             return change;
         }
 
-        public List<Product> GetSelection()
+        public Dictionary<string, Product> GetSelection()
         {
-            throw new NotImplementedException();
+            return this.selection;
         }
     }
 }

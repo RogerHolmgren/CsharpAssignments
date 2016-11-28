@@ -1,0 +1,44 @@
+[
+  {
+    "$type": "VendingMachine.Drink, VendingMachine",
+    "description": "A Softdrink",
+    "price": 15,
+    "name": "Cola"
+  },
+  {
+    "$type": "VendingMachine.Drink, VendingMachine",
+    "description": "A Softdrink",
+    "price": 15,
+    "name": "Fanta"
+  },
+  {
+    "$type": "VendingMachine.Drink, VendingMachine",
+    "description": "A hot beverage.",
+    "price": 13,
+    "name": "Tea"
+  },
+  {
+    "$type": "VendingMachine.Drink, VendingMachine",
+    "description": "A hot black beverage.",
+    "price": 20,
+    "name": "Coffee"
+  },
+  {
+    "$type": "VendingMachine.Drink, VendingMachine",
+    "description": "Plain Water.",
+    "price": 5,
+    "name": "Water"
+  },
+  {
+    "$type": "VendingMachine.Snack, VendingMachine",
+    "description": "A Bag of potato chips",
+    "price": 10,
+    "name": "Chips"
+  },
+  {
+    "$type": "VendingMachine.Food, VendingMachine",
+    "description": "A square pizza",
+    "price": 15,
+    "name": "PanPizza"
+  }
+]

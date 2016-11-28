@@ -11,6 +11,6 @@ namespace VendingMachine
         void InsertCash(string denomination);
         bool BuyProduct(Product prod);
         List<string> getChange();
-        List<Product> GetSelection();
+        Dictionary<string, Product> GetSelection();
     }
 }
