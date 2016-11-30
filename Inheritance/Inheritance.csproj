@@ -46,7 +46,6 @@
     <Compile Include="CoffeeMachine.cs" />
     <Compile Include="Human.cs" />
     <Compile Include="ILegLocomotion.cs" />
-    <Compile Include="IMultiLocomotion.cs" />
     <Compile Include="Robot.cs" />
     <Compile Include="ISerpentineLocomotion.cs" />
     <Compile Include="Snake.cs" />
