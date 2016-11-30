@@ -14,11 +14,7 @@ namespace VendingMachine
         static void Main(string[] args)
         {
             VendingMachine vm = new VendingMachine(@"..\..\products.json");
-            foreach (var item in vm.GetSelection())
-            {
-                Console.WriteLine(item.Key + ": "+ item.Value.name);
-            }
-
+            vm.Start();
         }
     }
 }

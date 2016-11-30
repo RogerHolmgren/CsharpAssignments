@@ -12,7 +12,8 @@ namespace VendingMachine
         public int price { get; private set; }
         public string name { get; private set; }
 
-        public Product(string name, int price, string description) {
+        public Product(string name, int price, string description)
+        {
             this.name = name;
             this.price = price;
             this.description = description;

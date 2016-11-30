@@ -31,14 +31,38 @@
   },
   {
     "$type": "VendingMachine.Snack, VendingMachine",
-    "description": "A Bag of potato chips",
+    "description": "A Bag of potato chips.",
     "price": 10,
     "name": "Chips"
   },
   {
+    "$type": "VendingMachine.Snack, VendingMachine",
+    "description": "A Bag of peanuts.",
+    "price": 10,
+    "name": "Peanuts"
+  },
+  {
     "$type": "VendingMachine.Food, VendingMachine",
-    "description": "A square pizza",
+    "description": "A square pizza.",
     "price": 15,
     "name": "PanPizza"
+  },
+  {
+    "$type": "VendingMachine.Food, VendingMachine",
+    "description": "A plain hamburger.",
+    "price": 20,
+    "name": "Burger"
+  },
+  {
+    "$type": "VendingMachine.Food, VendingMachine",
+    "description": "A awesome hamburger.",
+    "price": 15,
+    "name": "Bacon Burger"
+  },
+  {
+    "$type": "VendingMachine.Food, VendingMachine",
+    "description": "Contains \"high-energy plankton\".",
+    "price": 15,
+    "name": "Soylent Green"
   }
 ]
