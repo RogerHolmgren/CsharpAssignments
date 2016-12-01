@@ -30,6 +30,7 @@ namespace AdventOfCode
             {
                 int distance = int.Parse(d.Substring(1));
                 UpdateDirection(d);
+                // Take one step for each distance in a given direction.
                 for (int i = 1; i <= distance; i++)
                 {
                     switch (direction)
@@ -54,6 +55,7 @@ namespace AdventOfCode
                         Console.WriteLine($"First place visited twice: {x}:{y} {Math.Abs(x) + Math.Abs(y)}");
                         Found = true;
                     }
+                    // Save cords for each step taken.
                     cords.Add($"{x}:{y}");
                 }
             }
