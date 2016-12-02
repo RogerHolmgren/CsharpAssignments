@@ -13,7 +13,7 @@ namespace Inheritance
             new Cat("Misse", 3),
             new Snake("Snape", 2),
             new Robot("Data", 2338),
-            new CoffeeMachine("Nespresso2.0", 2015)
+            new CoffeeMachine("Nespresso", 2015)
         };
 
         static void Main(string[] args)
