@@ -1,0 +1,56 @@
+header, h1, li, aside, footer, #main, #wrapper{
+    border: 1px solid;
+}
+
+#wrapper{
+    background-color: azure;
+    margin: auto;
+    width: 700px;
+}
+
+header {
+    height: 80px;
+    background-color: aquamarine;
+}
+
+nav, header h1 {
+    margin: 0;
+    display: inline-block;
+}
+
+ul {
+    margin: 0;
+}
+
+nav ul li {
+    margin: 0;
+    background-color: darkkhaki;
+    display: inline-block;
+    padding-right: 20px;
+    height: 78px;
+    vertical-align:middle;
+}
+
+#main, aside{
+    display: inline-block;
+    vertical-align: top;
+    min-height: 50%;
+}
+
+#main {
+    background-color: coral;
+    width: 492px;
+}
+
+aside { 
+    background-color: chocolate;
+    width: 200px;
+}
+
+footer {
+    padding: 20px 0;
+    width: inherit;
+    position: fixed;
+    bottom: 0;
+    background-color: darkgray;
+}

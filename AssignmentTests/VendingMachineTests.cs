@@ -67,7 +67,7 @@ namespace VendingMachine.Tests
             VendingMachine vm = new VendingMachine(new List<Product>());
             vm.InsertCash("5kr");
             int expected = 5;
-            Assert.AreEqual<int>(expected, vm.MoneyAmountInPool);
+            Assert.AreEqual<int>(expected, vm.Balance);
         }
 
         [TestMethod()]
@@ -77,7 +77,7 @@ namespace VendingMachine.Tests
             vm.InsertCash("50kr");
             vm.InsertCash("5kr");
             vm.InsertCash("1kr");
-            List<string> change = vm.getChange();
+            List<string> change = vm.GetChange();
             Assert.AreEqual<int>(3, change.Count);
         }
     }
