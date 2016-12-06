@@ -12,10 +12,9 @@ namespace VendingMachine
     public class VendingMachine
     {
         private Dictionary<string, Product> _selection = new Dictionary<string, Product>();
+        private int[] _allowed = { 1, 2, 5, 10, 20, 50, 100, 200, 500 };
         public int Balance { get; private set; }
         public string LongestProductName { get; private set; }
-
-
 
         public VendingMachine(List<Product> products)
         {
@@ -31,6 +30,13 @@ namespace VendingMachine
             PopulateSelection(products);
         }
 
+        /// <summary>
+        /// Create a dictionary with generated keys that follow this pattern:
+        ///  A1 A2 A3
+        ///  B1 B2 B3
+        ///  etc...
+        /// </summary>
+        /// <param name="products"></param>
         private void PopulateSelection(List<Product> products)
         {
             products.Sort((p1, p2) => p1.name.Length.CompareTo(p2.name.Length));
@@ -91,7 +97,6 @@ namespace VendingMachine
             return p;
         }
 
-
         internal string GetInfo(string[] args)
         {
             string info = "";
@@ -109,7 +114,7 @@ namespace VendingMachine
             return info;
         }
 
-        public Dictionary<string, int> GetChange()
+        internal Dictionary<string, int> GetChange()
         {
             Dictionary<string, int> change = new Dictionary<string, int>();
             while (Balance > 0)
@@ -167,14 +172,16 @@ namespace VendingMachine
             return change;
         }
 
-        public int AddMoney(string[] args)
+        internal int AddMoney(string[] args)
         {
             int totalDeposit = 0;
             for (int i = 1; i < args.Count(); i++)
             {
-                if (AllowedCurrency.ContainsKey(args[i]))
+                int value = 0;
+                int.TryParse(args[i].Replace("kr", ""), out value);
+                if (_allowed.Contains(value))
                 {
-                    totalDeposit += AllowedCurrency[args[i]];
+                    totalDeposit += value;
                 }
                 else
                 {
@@ -184,17 +191,6 @@ namespace VendingMachine
             Balance += totalDeposit;
             return totalDeposit;
         }
-
-        public readonly Dictionary<string, int> AllowedCurrency = new Dictionary<string, int>(){
-            {   "1kr", 1 },
-            {   "5kr", 5 },
-            {  "10kr", 10 },
-            {  "20kr", 20 },
-            {  "50kr", 50 },
-            { "100kr", 100 },
-            { "500kr", 500 },
-            {"1000kr", 1000 }
-        };
 
         [Serializable]
         public class VendingMachineException : Exception

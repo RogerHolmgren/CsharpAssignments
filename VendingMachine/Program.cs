@@ -85,7 +85,7 @@ namespace VendingMachine
         {
             Console.Clear();
             Console.WriteLine("### Vending Machine Menu ###");
-            Console.WriteLine("- add [1kr,2kr,5kr,10kr,20kr,50kr,100kr,500kr .. ] - to add money.");
+            Console.WriteLine("- add [1kr,2kr,5kr,10kr,20kr,50kr,100kr,200kr,500kr .. ] - to add money.");
             Console.WriteLine("- info [code .. ] ie: \"info A1\" - to view product info.");
             Console.WriteLine("- buy [code] ie: \"buy A1\" - to buy a product.");
             Console.WriteLine("- quit or q - to quit.");
