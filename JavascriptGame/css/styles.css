@@ -1,0 +1,32 @@
+#anchor,
+h1,
+.tile,
+.wall,
+#player {
+  margin: 0;
+  padding: 0;
+}
+
+#anchor {
+  width: 572px;
+}
+
+.tile {
+  width: 50px;
+  height: 50px;
+  border: 1px solid black;
+  background-color: aquamarine;
+  float: left;
+}
+
+.wall {
+  background-color: darkred;
+}
+
+#player {
+  background-color: crimson;
+}
+
+h1 {
+  text-align: center;
+}
