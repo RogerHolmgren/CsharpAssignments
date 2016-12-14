@@ -11,15 +11,26 @@
 <body>
   <div id="anchor"></div>
 
-  <script>
-    var num = "831017273";
-    var check = 0;
-    for (i = num.length - 1; i >= 0; i--) {
-      var v = i % 2 == 0 ? num[i] * 2 : parseInt(num[i]);
-      check += v > 9 ? 1 + v % 10 : v;
-    }
-    console.log("Kontrolsiffra: " + (check * 9) % 10);
-  </script>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h2>Du är en vinnare!</h2>
+    </div>
+    <div class="modal-body">
+      <p>Grattis du är ganska bra du!</p>
+    </div>
+    <div class="modal-footer">
+      <h3>By game company lmd</h3>
+    </div>
+  </div>
+
+</div>
+
+  <script src="js/settings.js"></script>
   <script src="js/scripts.js"></script>
 </body>
 
