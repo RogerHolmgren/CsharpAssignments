@@ -1,10 +1,14 @@
 window.onload = function () {
+  // Fancy graphics when you win the game
   modal();
 
+  // For now load map index 1
   let map1 = mapsArray[1];
   for (let x = 0; x < map1.height; x++) {
+    // Create a row div
     let row = document.createElement('div');
     row.setAttribute('class', 'row');
+    // populate current row with tiles
     for (let y = 0; y < map1.width; y++) {
       let tile = document.createElement('div');
       tile.setAttribute("id", "x" + x + "y" + y);
@@ -54,6 +58,7 @@ function getXY(playerTile) {
 function move(oldPos, event) {
   let key = event.keyCode;
   let newXY = getXY(oldPos);
+  // Update newXY coords based on direction.
   switch (key) {
   case 37: //LEFT
     console.log('Left');
@@ -76,10 +81,12 @@ function move(oldPos, event) {
     break;
   }
 
+  // Check the next tile if it is a box or wall and move the if possible.
   let nextPos = document.getElementById("x" + newXY[0] + "y" + newXY[1]);
   if (nextPos.className.includes(Tiles.Wall)) {
     return false;
   } else if (nextPos.className.includes(Tiles.Block)) {
+    // if next tile has a block, check to see if that block can move.
     if (move(nextPos, event)) {
       nextPos.className += oldPos.className.includes(Tiles.Player) ? Tiles.Player : Tiles.Block;
       oldPos.className = oldPos.className.replace(Tiles.Player, '');
@@ -87,6 +94,7 @@ function move(oldPos, event) {
       return true;
     }
   } else {
+    // move the entity
     nextPos.className += oldPos.className.includes(Tiles.Player) ? Tiles.Player : Tiles.Block;
     oldPos.className = oldPos.className.replace(Tiles.Player, '');
     oldPos.className = oldPos.className.replace(Tiles.Block, '');
@@ -98,7 +106,7 @@ function getPlayer() {
   return document.getElementsByClassName('player')[0];
 }
 
-
+// Fancy Graphics
 function modal() {
   // Get the modal
   var modal = document.getElementById('myModal');
